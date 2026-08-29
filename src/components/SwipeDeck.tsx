@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { animated, to, useSpring } from '@react-spring/web'
 import { useDrag } from '@use-gesture/react'
 import type { Recipe } from '../data/schema'
@@ -105,6 +105,15 @@ export function SwipeDeck({
     api.set({ x: 0, y: 0, rot: 0 })
   }, [recipes, api])
 
+  // Recentre the card the swipe just promoted. This has to happen after the
+  // render that advanced the index, not inside commit(): a set() issued in the
+  // same tick as that state update loses its DOM write, and because the spring
+  // then already reads 0, no later set() can notify anything and the new top
+  // card is stranded at the previous card's drag offset.
+  useLayoutEffect(() => {
+    api.set({ x: 0, y: 0, rot: 0 })
+  }, [index, api])
+
   useEffect(() => () => clearTimeout(flyTimer.current), [])
 
   const top = recipes[index]
@@ -118,7 +127,6 @@ export function SwipeDeck({
       onDecide(top, direction)
       setFlying({ recipe: top, direction, fromX })
       setIndex((i) => i + 1)
-      api.set({ x: 0, y: 0, rot: 0 })
 
       clearTimeout(flyTimer.current)
       flyTimer.current = setTimeout(() => setFlying(null), reduced ? 0 : EXIT_MS + 40)
