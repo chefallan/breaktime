@@ -15,6 +15,7 @@ Where things live:
 - localStorage prefs, history  src/state/
 - Swipe deck + card            src/components/
 - Screens                      src/screens/
+- Visit-counter endpoint       api/count.ts
 
 Test command:       npm test
 Pre-PR command:     npm test && npm run build   (build runs tsc -b, so this is the typecheck too)
