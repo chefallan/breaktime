@@ -6,6 +6,8 @@ import { RecipeCard } from './RecipeCard'
 
 export type SwipeDirection = 'pass' | 'take'
 
+// Validated by hand on a real phone and confirmed to feel right. Retune only
+// against hardware — these were guesses until someone actually swiped them.
 const THRESHOLD = 90
 const FLING_VELOCITY = 0.35
 const EXIT_MS = 380

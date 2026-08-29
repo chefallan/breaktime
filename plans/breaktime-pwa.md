@@ -156,9 +156,11 @@ typecheck, 28 precache entries (539 KiB).
 server and reloaded. Onboarding, deck, and recipe detail all rendered from cache
 with both self-hosted fonts.
 
-**The one check still owed**: real-device feel. Gesture input could not be driven
-in this environment (no visible browser pane, so no pointer events and no
-screenshots). Everything was verified through the DOM at a 375x812 viewport and
-via programmatic clicks. The drag physics — threshold, fling velocity, rotation —
-are unvalidated by human hands and are the most likely thing to need tuning.
-Constants live at the top of `src/components/SwipeDeck.tsx`.
+**Real-device check: DONE.** Confirmed working on a phone by the owner. This was
+the last item this environment could not verify (no visible browser pane, so no
+pointer input and no screenshots). The drag path is the one that mattered: the
+card-recentring bug was reproducible only through real dragging, never through
+the button controls the automated tests drive.
+
+Swipe physics (THRESHOLD, FLING_VELOCITY, EXIT_MS in src/components/SwipeDeck.tsx)
+are now validated as usable, though not yet deliberately tuned.
