@@ -58,3 +58,37 @@ frames, so the old design fails there.
 recipe sites report. If that drifts, the app's only promise breaks.
 
 Design decisions and their reasoning are in [`plans/breaktime-pwa.md`](plans/breaktime-pwa.md).
+
+## Visit counter
+
+Off by default. The app makes **no outbound request at all** unless
+`VITE_VISIT_COUNTER_URL` is set at build time — verified by inspecting the
+default bundle, where the endpoint compiles to `undefined`.
+
+When set, the app sends one `POST` per browser session and shows the total on the
+break picker. Your endpoint needs to satisfy exactly this:
+
+| | |
+| --- | --- |
+| Request | `POST <VITE_VISIT_COUNTER_URL>`, **empty body** |
+| Response | `200` with JSON `{ "count": <number> }` |
+| CORS | Required if the endpoint is on a different origin than the app |
+
+The empty body is deliberate. The endpoint learns that a visit happened and
+nothing else — no id, no device info, no preferences. That keeps this a counter
+rather than tracking, which is what keeps it clear of consent obligations. If you
+ever add an identifier, that calculus changes.
+
+Every failure path — offline, wrong URL, endpoint down, malformed response —
+returns null and renders nothing. The app never shows a zero or a placeholder in
+place of a real number. In dev only, a misconfigured endpoint logs one console
+warning, because a silent failure is indistinguishable from no counter and makes
+a typo very hard to spot.
+
+Note for Windows: setting the variable in Git Bash mangles a value starting with
+`/` into a Windows path (`/api/count` becomes `C:/Program Files/Git/api/count`).
+Use a full `http://…` URL, or prefix the command with `MSYS_NO_PATHCONV=1`.
+
+The count is not yet wired to any host — see `plans/breaktime-pwa.md`. A public
+increment endpoint is trivially inflatable by anyone with `curl`, which matters
+because the number is displayed to users.

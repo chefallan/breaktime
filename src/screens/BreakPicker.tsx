@@ -20,10 +20,13 @@ export function BreakPicker({
   daypart,
   onPick,
   onEditPrefs,
+  visits,
 }: {
   daypart: Daypart
   onPick: (minutes: BreakLength) => void
   onEditPrefs: () => void
+  /** Global visit total, or null when the counter is unconfigured or unreachable. */
+  visits?: number | null
 }) {
   return (
     <div className="flex flex-1 flex-col">
@@ -61,7 +64,7 @@ export function BreakPicker({
         ))}
       </div>
 
-      <div className="mt-auto pb-2">
+      <div className="mt-auto flex items-center justify-between gap-4 pb-2">
         <button
           type="button"
           onClick={onEditPrefs}
@@ -69,6 +72,13 @@ export function BreakPicker({
         >
           Change what you cannot eat
         </button>
+        {/* Absent entirely when there is no number — never a zero or a placeholder
+            sitting there waiting to be filled in. */}
+        {typeof visits === 'number' && (
+          <span className="shrink-0 text-xs text-gata/30 tabular-nums">
+            {visits.toLocaleString()} visits so far
+          </span>
+        )}
       </div>
     </div>
   )

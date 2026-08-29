@@ -15,6 +15,7 @@ import { SwipeDeck, type SwipeDirection } from './components/SwipeDeck'
 import { Onboarding } from './screens/Onboarding'
 import { BreakPicker } from './screens/BreakPicker'
 import { RecipeDetail } from './screens/RecipeDetail'
+import { recordVisit } from './state/visits'
 import type { Recipe } from './data/schema'
 
 type Screen = 'onboarding' | 'picker' | 'deck' | 'detail' | 'empty' | 'exhausted'
@@ -27,7 +28,21 @@ export default function App() {
   const [detail, setDetail] = useState<Recipe | null>(null)
   const [history, setHistory] = useState<History>(() => loadHistory(new Date()))
 
+  const [visits, setVisits] = useState<number | null>(null)
+
   const daypart = useMemo(() => daypartFor(new Date()), [])
+
+  // Fire and forget. Inert unless VITE_VISIT_COUNTER_URL is set, and a failure
+  // here must never be visible to the user.
+  useEffect(() => {
+    let live = true
+    void recordVisit().then((n) => {
+      if (live) setVisits(n)
+    })
+    return () => {
+      live = false
+    }
+  }, [])
 
   useEffect(() => {
     document.documentElement.style.setProperty('--lamp', DAYPART_LAMP[daypart])
@@ -113,7 +128,7 @@ export default function App() {
         {screen === 'onboarding' && <Onboarding onDone={finishOnboarding} />}
 
         {screen === 'picker' && (
-          <BreakPicker daypart={daypart} onPick={startBreak} onEditPrefs={editPrefs} />
+          <BreakPicker daypart={daypart} onPick={startBreak} onEditPrefs={editPrefs} visits={visits} />
         )}
 
         {screen === 'exhausted' && (
