@@ -99,3 +99,23 @@ link preview card that shows what Breaktime is.
 None blocking. One thing the human owns and code cannot: attaching **Storage →
 Upstash Redis** to the Vercel project, then redeploying, is what makes the visit
 count appear. Until that is done the number stays hidden by design.
+
+## What actually happened
+
+Shipped in `cff212f`, with one step that was not in the plan above.
+
+**Step 8, added after review.** `src/pwa/installedApps.ts`. Chromium never fires
+`beforeinstallprompt` for an app it has already installed, so the gate as planned
+told returning visitors to install what they already had. `getInstalledRelatedApps()`
+closes that, which is why the manifest now lists its own URL under
+`related_applications` with `prefer_related_applications` pinned to `false`. It is
+a courtesy and never a way through — there is a test asserting the app still does
+not render on the strength of that detection alone.
+
+**Not verified, and it cannot be here.** The already-installed branch keys off the
+manifest URL, so it reports nothing on localhost and needs the real domain plus a
+genuinely installed PWA. Unit tests cover the logic; the live path has not run.
+
+**Still open, and not ours.** `POST /api/count` returned 503 at the time of
+writing. Attaching Storage → Upstash Redis to the Vercel project and redeploying
+is what makes the visit count appear.
