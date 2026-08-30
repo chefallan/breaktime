@@ -8,6 +8,7 @@ See README.md for how to run it, plans/ for why things are the way they are.
 Dangerous areas — extra care regardless of change size:
 - Allergen filtering (a wrong answer gets eaten)  src/engine/suggest.ts, src/data/schema.ts
 - Recipe allergen tagging                         src/data/{drinks,merienda,meals}.ts
+- Install gate (a bug here hides the whole app)   src/screens/InstallGate.tsx, src/pwa/
 
 Where things live:
 - Recipe data + validator      src/data/
@@ -15,6 +16,8 @@ Where things live:
 - localStorage prefs, history  src/state/
 - Swipe deck + card            src/components/
 - Screens                      src/screens/
+- Install gate + platform      src/pwa/, src/screens/InstallGate.tsx
+- Icon and OG-card generator   scripts/generate-icons.mjs (npm run icons)
 - Visit-counter endpoint       api/count.ts
 
 Test command:       npm test

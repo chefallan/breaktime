@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+    <rect width="512" height="512" rx="112.64" fill="#1c1310"/>
+    <mask id="wedge" maskUnits="userSpaceOnUse" x="62.26" y="62.26" width="387.48" height="387.48">
+      <rect x="62.26" y="62.26" width="387.48" height="387.48" fill="#fff"/>
+      <path d="M 256 256 L 256 76.35 A 179.65 179.65 0 0 1 431.72 218.65 Z" fill="#000"/>
+    </mask>
+    <circle cx="256" cy="256" r="176.13" fill="#eddcbf" mask="url(#wedge)"/>
+    <path d="M 256 256 L 269.07 93.61 A 162.92 162.92 0 0 1 412.13 209.46 Z" fill="#9b6fd4"/>
+  </svg>
